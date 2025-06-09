@@ -120,3 +120,53 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .gradient {
+    background: linear-gradient(135deg, #2563eb, #9333ea);
+  }
+  
+  .gradient-title {
+    background: linear-gradient(135deg, #2563eb, #9333ea);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    padding-right: 0.5rem;
+    padding-bottom: 0.5rem;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+  
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradientMove 3s ease infinite;
+  }
+}
+
+@layer components {
+  .hero-image-wrapper {
+    perspective: 1000px;
+  }
+  
+  .hero-image {
+    transform: rotateX(15deg) scale(1);
+    transition: transform 0.5s ease-out;
+    will-change: transform;
+  }
+  
+  .hero-image.scrolled {
+    transform: rotateX(0deg) scale(1) translateY(40px);
+  }
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
