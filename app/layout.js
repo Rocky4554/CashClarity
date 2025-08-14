@@ -1,11 +1,13 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import Header from '@/components/header.jsx';
+import Header from "@/components/header/headerServer";
 import {
   ClerkProvider
-} from '@clerk/nextjs'
+} from '@clerk/nextjs'  
 import { Toaster } from "sonner";
+import { ReduxProvider } from '@/app/lib/ReduxProvider.js';
+import Footer from '@/components/footer.js';
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -21,15 +23,18 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.className}`}
       >
+        <ReduxProvider>
         <Header/>
         <main className="min-h-screen">{children}</main>
         <Toaster richColors />
 
-        <footer className="bg-blue-50 py-12">
+        {/* <footer className="bg-blue-50 py-12">
             <div className="container mx-auto px-4 text-center text-gray-600">
-              <p>Made with 💗 by RoadsideCoder</p>
+              <p>Made with 💗 by Raunak</p>
             </div>
-          </footer>
+          </footer> */}
+          <Footer/>
+          </ReduxProvider>
       </body>
     </html>
     </ClerkProvider>

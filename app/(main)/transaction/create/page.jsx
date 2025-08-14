@@ -2,10 +2,13 @@ import { getUserAccounts } from "@/actions/dashboard";
 import { defaultCategories } from "@/data/categories";
 import { AddTransactionForm } from "../_components/transaction-form";
 import { getTransaction } from "@/actions/transaction";
+import {getUserInfo} from "@/actions/user";
 
 export default async function AddTransactionPage({ searchParams }) {
   const accounts = await getUserAccounts();
-  const editId = searchParams?.edit;
+  const editId = await searchParams?.edit;
+  const userInfo = await getUserInfo(); // Get the full user info
+
 
   let initialData = null;
   if (editId) {
@@ -23,6 +26,7 @@ export default async function AddTransactionPage({ searchParams }) {
         categories={defaultCategories}
         editMode={!!editId}
         initialData={initialData}
+        user={userInfo?.data} // 👈 Pass the actual user data
       />
     </div>
   );

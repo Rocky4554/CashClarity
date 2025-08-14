@@ -48,6 +48,7 @@ export async function getAccountWithTransactions(accountId) {
   };
 }
 
+//deleting transactions
 export async function bulkDeleteTransactions(transactionIds) {
   try {
     const { userId } = await auth();
@@ -87,6 +88,7 @@ export async function bulkDeleteTransactions(transactionIds) {
         },
       });
 
+  
       // Update account balances
       for (const [accountId, balanceChange] of Object.entries(
         accountBalanceChanges
@@ -104,6 +106,19 @@ export async function bulkDeleteTransactions(transactionIds) {
 
     revalidatePath("/dashboard");
     revalidatePath("/account/[id]");
+
+         const actualCount = await db.transaction.count({
+            where: { userId: user.id },
+          });
+      
+          console.log("Actual transaction count on delete:", actualCount);
+      
+          // Update stored count to match actual count
+           const updatedUSer=await db.user.update({
+            where: { id: user.id },
+            data: { transactionCount: actualCount },
+          });
+            console.log("transaction count in user profile on delete:", updatedUSer.transactionCount);
 
     return { success: true };
   } catch (error) {
@@ -148,3 +163,66 @@ export async function updateDefaultAccount(accountId) {
     return { success: false, error: error.message };
   }
 }
+
+// update any account values
+export async function updateUserAccount(accountId, updates) {
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const user = await db.user.findUnique({
+      where: { clerkUserId: userId },
+    });
+    if (!user) throw new Error("User not found");
+
+    const account = await db.account.update({
+      where: {
+        id: accountId,
+        userId: user.id,
+      },
+      data: updates,
+    });
+
+    revalidatePath("/dashboard");
+    revalidatePath("/account/[id]");
+
+    return { success: true, data: account };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+//delete an particular account of a user
+export async function deleteAccount(accountId) {
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const user = await db.user.findUnique({
+      where: { clerkUserId: userId },
+    });
+    if (!user) throw new Error("User not found");
+
+    // Optional: delete related transactions first (if cascade is not enabled in schema)
+    await db.transaction.deleteMany({
+      where: {
+        accountId,
+        userId: user.id,
+      },
+    });
+
+    await db.account.delete({
+      where: {
+        id: accountId,
+        userId: user.id,
+      },
+    });
+
+    revalidatePath("/dashboard");
+
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+

@@ -6,6 +6,9 @@ import { revalidatePath } from "next/cache";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import aj from "@/lib/arcjet";
 import { request } from "@arcjet/next";
+// import { useUser } from '@/reduxStore/hook/userUser';
+import { useDispatch } from "react-redux";
+import { setUser } from "@/reduxStore/userSlice";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -15,6 +18,90 @@ const serializeAmount = (obj) => ({
 });
 
 // Create Transaction@google/generative-ai
+// export async function createTransaction(data) {
+//   try {
+//     const { userId } = await auth();
+//     if (!userId) throw new Error("Unauthorized");
+
+//     // Get request data for ArcJet
+//     const req = await request();
+
+//     // Check rate limit
+//     const decision = await aj.protect(req, {
+//       userId,
+//       requested: 1, // Specify how many tokens to consume
+//     });
+
+//     if (decision.isDenied()) {
+//       if (decision.reason.isRateLimit()) {
+//         const { remaining, reset } = decision.reason;
+//         console.error({
+//           code: "RATE_LIMIT_EXCEEDED",
+//           details: {
+//             remaining,
+//             resetInSeconds: reset,
+//           },
+//         });
+
+//         throw new Error("Too many requests. Please try again later.");
+//       }
+
+//       throw new Error("Request blocked");
+//     }
+
+//     const user = await db.user.findUnique({
+//       where: { clerkUserId: userId },
+//     });
+
+//     if (!user) {
+//       throw new Error("User not found");
+//     }
+
+//     const account = await db.account.findUnique({
+//       where: {
+//         id: data.accountId,
+//         userId: user.id,
+//       },
+//     });
+
+//     if (!account) {
+//       throw new Error("Account not found");
+//     }
+
+//     // Calculate new balance
+//     const balanceChange = data.type === "EXPENSE" ? -data.amount : data.amount;
+//     const newBalance = account.balance.toNumber() + balanceChange;
+
+//     // Create transaction and update account balance
+//     const transaction = await db.$transaction(async (tx) => {
+//       const newTransaction = await tx.transaction.create({
+//         data: {
+//           ...data,
+//           userId: user.id,
+//           nextRecurringDate:
+//             data.isRecurring && data.recurringInterval
+//               ? calculateNextRecurringDate(data.date, data.recurringInterval)
+//               : null,
+//         },
+//       });
+
+//       await tx.account.update({
+//         where: { id: data.accountId },
+//         data: { balance: newBalance },
+//       });
+
+//       return newTransaction;
+//     });
+
+//     revalidatePath("/dashboard");
+//     revalidatePath(`/account/${transaction.accountId}`);
+
+//     return { success: true, data: serializeAmount(transaction) };
+//   } catch (error) {
+//     throw new Error(error.message);
+//   }
+// }
+
 export async function createTransaction(data) {
   try {
     const { userId } = await auth();
@@ -23,10 +110,10 @@ export async function createTransaction(data) {
     // Get request data for ArcJet
     const req = await request();
 
-    // Check rate limit
+    //Check rate limit
     const decision = await aj.protect(req, {
       userId,
-      requested: 1, // Specify how many tokens to consume
+      requested: 1,
     });
 
     if (decision.isDenied()) {
@@ -39,10 +126,8 @@ export async function createTransaction(data) {
             resetInSeconds: reset,
           },
         });
-
         throw new Error("Too many requests. Please try again later.");
       }
-
       throw new Error("Request blocked");
     }
 
@@ -54,6 +139,20 @@ export async function createTransaction(data) {
       throw new Error("User not found");
     }
 
+    // ✅ 1. Check if user is not Pro and limit reached
+    // if (!user.isPro) {
+    //   // const transactionCount = await db.transaction.count({
+    //   //   where: { userId: user.id },
+    //   // });
+
+    //   if (actualCount >5) {
+    //     throw new Error(
+    //       "Free plan limit reached re baba. Upgrade to Pro to add more transactions."
+    //     );
+    //   }
+    // }
+
+    // ✅ 2. Check account belongs to user
     const account = await db.account.findUnique({
       where: {
         id: data.accountId,
@@ -65,11 +164,11 @@ export async function createTransaction(data) {
       throw new Error("Account not found");
     }
 
-    // Calculate new balance
+    // ✅ 3. Calculate balance change
     const balanceChange = data.type === "EXPENSE" ? -data.amount : data.amount;
     const newBalance = account.balance.toNumber() + balanceChange;
 
-    // Create transaction and update account balance
+    // ✅ 4. Create transaction and update balance in a transaction
     const transaction = await db.$transaction(async (tx) => {
       const newTransaction = await tx.transaction.create({
         data: {
@@ -87,13 +186,53 @@ export async function createTransaction(data) {
         data: { balance: newBalance },
       });
 
+      // ✅ Increment user's transactionCount
+      // await tx.user.update({
+      //   where: { id: user.id },
+      //   data: {
+      //     transactionCount: {
+      //       increment: 1,
+      //     },
+      //   },
+      // });
+
       return newTransaction;
     });
 
+    // ✅ 5. Revalidate frontend
     revalidatePath("/dashboard");
     revalidatePath(`/account/${transaction.accountId}`);
 
-    return { success: true, data: serializeAmount(transaction) };
+    const actualCount = await db.transaction.count({
+      where: { userId: user.id },
+    });
+
+    console.log("Actual transaction count when adding:", actualCount);
+
+
+    // if (!user.isPro) {
+    //   // const transactionCount = await db.transaction.count({
+    //   //   where: { userId: user.id },
+    //   // });
+
+    //   if (actualCount >= 5) {
+    //     throw new Error(
+    //       "Free plan limit reached re baba. Upgrade to Pro to add more transactions."
+    //     );
+    //   }
+    // }
+
+    // Update stored count to match actual count
+    const updatedUSer = await db.user.update({
+      where: { id: user.id },
+      data: { transactionCount: actualCount },
+    });
+    console.log(
+      "transaction count in user profile on adding:",
+      updatedUSer.transactionCount
+    );
+
+    return { success: true, data: serializeAmount(transaction) ,actualCount};
   } catch (error) {
     throw new Error(error.message);
   }
@@ -230,7 +369,7 @@ export async function getUserTransactions(query = {}) {
 // Scan Receipt
 export async function scanReceipt(file) {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     // Convert File to ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();

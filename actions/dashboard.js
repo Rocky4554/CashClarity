@@ -128,7 +128,8 @@ export async function createAccount(data) {
     const serializedAccount = serializeTransaction(account);
 
     revalidatePath("/dashboard");
-    return { success: true, data: serializedAccount };
+    revalidatePath("/account/[id]");
+    return { success: true, data: serializedAccount};
   } catch (error) {
     throw new Error(error.message);
   }
@@ -154,3 +155,51 @@ export async function getDashboardData() {
 
   return transactions.map(serializeTransaction);
 }
+
+export async function EditAccount({ id, name, type, balance, isDefault }) {
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const user = await db.user.findUnique({
+      where: { clerkUserId: userId },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Convert balance to float
+    const balanceFloat = parseFloat(balance);
+    if (isNaN(balanceFloat)) {
+      throw new Error("Invalid balance amount");
+    }
+
+    // If this account is marked as default, unset all others first
+    if (isDefault) {
+      await db.account.updateMany({
+        where: { userId: user.id, isDefault: true, NOT: { id } },
+        data: { isDefault: false },
+      });
+    }
+
+    // Update the account
+    const updatedAccount = await db.account.update({
+      where: { id, userId: user.id },
+      data: {
+        name,
+        type,
+        balance: balanceFloat,
+        isDefault,
+      },
+    });
+
+    revalidatePath("/dashboard");
+
+    return { success: true, data: serializeTransaction(updatedAccount) };
+  } catch (error) {
+    console.error("UpdateAccount Error:", error);
+    throw new Error(error.message || "Failed to update account");
+  }
+}
+

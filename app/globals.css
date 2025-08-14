@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* ========== Theme Setup ========== */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -41,8 +42,59 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
+  --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
+
+  @keyframes shimmer-slide {
+    to {
+      transform: translate(calc(100cqw - 100%), 0);
+    }
+  }
+
+  @keyframes spin-around {
+    0% {
+      transform: translateZ(0) rotate(0);
+    }
+
+    15%,
+    35% {
+      transform: translateZ(0) rotate(90deg);
+    }
+
+    65%,
+    85% {
+      transform: translateZ(0) rotate(270deg);
+    }
+
+    100% {
+      transform: translateZ(0) rotate(360deg);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
 }
 
+/* ========== Light Theme ========== */
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -78,6 +130,7 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* ========== Dark Theme ========== */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -112,20 +165,23 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ========== Base Reset ========== */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
+/* ========== Custom Utilities ========== */
 @layer utilities {
   .gradient {
     background: linear-gradient(135deg, #2563eb, #9333ea);
   }
-  
+
   .gradient-title {
     background: linear-gradient(135deg, #2563eb, #9333ea);
     font-weight: 800;
@@ -136,37 +192,142 @@
     background-clip: text;
     -webkit-background-clip: text;
   }
-  
+
   .animate-gradient {
     background-size: 200% 200%;
     animation: gradientMove 3s ease infinite;
   }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Shimmer Animations */
+  .animate-shimmer-border {
+    animation: shimmer-border 2s ease-in-out infinite;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  @keyframes shimmer-border {
+    0% {
+      border-image: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent) 1;
+    }
+
+    50% {
+      border-image: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent) 1;
+    }
+
+    100% {
+      border-image: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent) 1;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* Custom Spin Speeds */
+  .animate-spin-fast {
+    animation: spin 1s linear infinite;
+  }
+
+  .animate-spin-fast-reverse {
+    animation: spin-reverse 1s linear infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin 4s linear infinite;
+  }
+
+  @keyframes spin-reverse {
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+
+  /* 👉 Shimmer Text Loader */
+  .loader {
+    width: fit-content;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 25px;
+    background: radial-gradient(circle closest-side, #A4193D 94%, #f1080800)
+      right / calc(200% - 1em) 100%;
+    animation: l24 2s infinite alternate linear;
+    position: relative;
+  }
+
+  .loader::before {
+    content: attr(data-text);
+    line-height: 1em;
+    color: transparent;
+    background: inherit;
+    background-image: radial-gradient(circle closest-side, #FFDFB9 94%, #080500);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  @keyframes l24 {
+    100% {
+      background-position: left;
+    }
+  }
+
 }
 
+/* ========== Custom Components ========== */
 @layer components {
   .hero-image-wrapper {
     perspective: 1000px;
   }
-  
+
   .hero-image {
     transform: rotateX(15deg) scale(1);
     transition: transform 0.5s ease-out;
     will-change: transform;
   }
-  
+
   .hero-image.scrolled {
     transform: rotateX(0deg) scale(1) translateY(40px);
   }
-}
 
-@keyframes gradientMove {
-  0% {
-    background-position: 0% 50%;
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }

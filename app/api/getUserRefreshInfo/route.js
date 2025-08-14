@@ -1,0 +1,88 @@
+import { db } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
+
+export async function getUserInfo(options = {}) {
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const {
+      includeTransactions = false,
+      includeAccounts = false,
+      includeBudgets = false,
+      transactionLimit = 10,
+      accountsWithBalance = true,
+    } = options;
+
+    // Base query
+    const user = await db.user.findUnique({
+      where: { clerkUserId: userId },
+      include: {
+        // Conditionally include related data based on options
+        transactions: includeTransactions ? {
+          take: transactionLimit,
+          orderBy: { createdAt: 'desc' },
+          include: {
+            account: {
+              select: {
+                name: true,
+                type: true,
+              }
+            }
+          }
+        } : false,
+        
+        accounts: includeAccounts ? accountsWithBalance : false,
+        
+        budgets: includeBudgets ? {
+          orderBy: { createdAt: 'desc' },
+        } : false,
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Calculate additional stats
+    const stats = {
+      totalTransactions: user.transactionCount,
+      isPro: user.isPro,
+      accountsCount: includeAccounts ? user.accounts?.length || 0 : await db.account.count({
+        where: { userId: user.id }
+      }),
+      budgetsCount: includeBudgets ? user.budgets?.length || 0 : await db.budget.count({
+        where: { userId: user.id }
+      }),
+    };
+
+    // If accounts are included, calculate total balance
+    if (includeAccounts && user.accounts) {
+      stats.totalBalance = user.accounts.reduce((sum, account) => {
+        return sum + account.balance.toNumber();
+      }, 0);
+    }
+
+    return {
+      success: true,
+      data: {
+        id: user.id,
+        clerkUserId: user.clerkUserId,
+        email: user.email,
+        name: user.name,
+        imageUrl: user.imageUrl,
+        isPro: user.isPro,
+        transactionCount: user.transactionCount,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        stats,
+        ...(includeTransactions && { transactions: user.transactions }),
+        ...(includeAccounts && { accounts: user.accounts }),
+        ...(includeBudgets && { budgets: user.budgets }),
+      }
+    };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}

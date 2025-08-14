@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
+// it is a custom hook for fecthing data with a callback function , makng a api call and handling loading, error and data states
+// it can be used in any component to fetch data and handle loading and error states
+
 const useFetch = (cb) => {
   const [data, setData] = useState(undefined);
   const [loading, setLoading] = useState(null);

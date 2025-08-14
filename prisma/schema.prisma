@@ -14,6 +14,11 @@ model User {
   email         String    @unique
   name          String?
   imageUrl      String?
+  isPro           Boolean   @default(false) // 👈 Add this line
+  stripeSessionId String?  @unique
+  stripeCustomerId String? @unique
+  proUpgradeDate  DateTime?
+  transactionCount Int      @default(0)     // 👈 Optional, for tracking
   transactions  Transaction[]
   accounts      Account[]
   budgets       Budget[]

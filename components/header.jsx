@@ -1,12 +1,16 @@
 import React from "react";
 import { Button } from "./ui/button";
-import { PenBox, LayoutDashboard } from "lucide-react";
+import { PenBox, LayoutDashboard, BadgeIndianRupee } from "lucide-react";
 import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { checkUser } from "@/lib/checkUser";
 import Image from "next/image";
+ import { getUserAccounts } from "@/actions/dashboard";
 
 const Header = async () => {
+   const [accounts] = await Promise.all([
+        getUserAccounts(),
+      ]);
   await checkUser();
 
   return (
@@ -47,6 +51,15 @@ const Header = async () => {
               <Button variant="outline">
                 <LayoutDashboard size={18} />
                 <span className="hidden md:inline">Dashboard</span>
+              </Button>
+            </Link>
+            <Link
+              href="/transactions"
+              className="text-gray-600 hover:text-blue-600 flex items-center gap-2"
+            >
+              <Button variant="outline">
+                <BadgeIndianRupee size={18} />
+                <span className="hidden md:inline">Transactions</span>
               </Button>
             </Link>
             <a href="/transaction/create">
