@@ -1,64 +1,3 @@
-// import { createSlice } from '@reduxjs/toolkit';
-
-// const initialState = {
-//   id: '',
-//   clerkUserId: '',
-//   email: '',
-//   name: '',
-//   imageUrl: '',
-//   isPro: false,
-//   transactionCount: 0,
-//   createdAt: '',
-//   updatedAt: '',
-//   actualCount: 0,
-//   proUser: false,
-// };
-
-// const userSlice = createSlice({
-//   name: 'user',
-//   initialState,
-//   reducers: {
-//     setUserInfo: (state, action) => {
-//       const userData = action.payload;
-//       state.id = userData.id || '';
-//       state.clerkUserId = userData.clerkUserId || '';
-//       state.email = userData.email || '';
-//       state.name = userData.name || '';
-//       state.imageUrl = userData.imageUrl || '';
-//       state.isPro = userData.isPro || false;
-//       state.transactionCount = userData.transactionCount || 0;
-//       state.createdAt = userData.createdAt || '';
-//       state.updatedAt = userData.updatedAt || '';
-//       state.proUser = userData.isPro || false;
-//     },
-//     updateActualCount: (state, action) => {
-//       state.actualCount = action.payload;
-//     },
-//     updateProUser: (state, action) => {
-//       state.isPro = action.payload;
-//       state.proUser = action.payload;
-//     },
-//     updateTransactionCount: (state, action) => {
-//       state.transactionCount = action.payload;
-//     },
-//     clearUser: (state) => {
-//       return initialState;
-//     },
-//   },
-// });
-
-// export const { 
-//   setUserInfo, 
-//   updateActualCount, 
-//   updateProUser, 
-//   updateTransactionCount,
-//   clearUser 
-// } = userSlice.actions;
-
-// export default userSlice.reducer;
-
-
-/// experiment 
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getUserAccounts } from "@/actions/dashboard";
@@ -98,25 +37,6 @@ export const getUserDetails = createAsyncThunk(
     }
   }
 );
-// in reduxStore/userSlice.js
-// export const getUserDetails = createAsyncThunk(
-//   'user/getUserDetails',
-//   async (options = {}, { rejectWithValue }) => {
-//     try {
-//       const res = await fetch('/api/getUserRefreshInfo');
-//       const data = await res.json();
-
-//       if (!data.success) {
-//         throw new Error(data.error || 'Failed to fetch user info');
-//       }
-
-//       return serializeUserData(data.data);
-//     } catch (error) {
-//       return rejectWithValue(error.message);
-//     }
-//   }
-// );
-
 
 export const getAccountDetails = createAsyncThunk(
   'user/getAccountDetails',

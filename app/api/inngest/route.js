@@ -9,7 +9,7 @@ import {// import functions from "@/lib/inngest/functions.js" for diff functiona
   triggerRecurringTransactions,
 } from "@/lib/inngest/functions.js";
 
-export const { GET, POST} = serve({// Define HTTP methods for the route
+export const { GET, POST, PUT} = serve({// Define HTTP methods for the route
   client: inngest,
   functions: [
     processRecurringTransaction,
@@ -18,3 +18,4 @@ export const { GET, POST} = serve({// Define HTTP methods for the route
     checkBudgetAlerts,
   ],
 });
+

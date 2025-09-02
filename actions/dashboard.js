@@ -5,6 +5,7 @@ import { db } from "@/lib/prisma";
 import { request } from "@arcjet/next";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { checkUser } from '@/lib/checkUser';
 
 const serializeTransaction = (obj) => {
   const serialized = { ...obj };
@@ -17,19 +18,53 @@ const serializeTransaction = (obj) => {
   return serialized;
 };
 
+// export async function getUserAccounts() {
+
+
+//   const { userId } = await auth();
+//   if (!userId) throw new Error("Unauthorized");
+
+//   const user = await db.user.findUnique({
+//     where: { clerkUserId: userId },
+//   });
+
+//   if (!user) {
+//     throw new Error("User not found");
+//   }
+
+//   try {
+//     const accounts = await db.account.findMany({
+//       where: { userId: user.id },
+//       orderBy: { createdAt: "desc" },
+//       include: {
+//         _count: {
+//           select: {
+//             transactions: true,
+//           },
+//         },
+//       },
+//     });
+
+//     // Serialize accounts before sending to client
+//     const serializedAccounts = accounts.map(serializeTransaction);
+
+//     return serializedAccounts;
+//   } catch (error) {
+//     console.error(error.message);
+//   }
+// }
 export async function getUserAccounts() {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
-
-  const user = await db.user.findUnique({
-    where: { clerkUserId: userId },
-  });
-
-  if (!user) {
-    throw new Error("User not found");
-  }
-
   try {
+    // Use your existing checkUser function instead of manual auth check
+    const user = await checkUser();
+    
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+
+    console.log('Getting accounts for user:', user.id);
+
+    // Get user's accounts (now user definitely exists)
     const accounts = await db.account.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: "desc" },
@@ -42,12 +77,16 @@ export async function getUserAccounts() {
       },
     });
 
+    console.log('Found accounts:', accounts.length);
+
     // Serialize accounts before sending to client
     const serializedAccounts = accounts.map(serializeTransaction);
 
     return serializedAccounts;
+    
   } catch (error) {
-    console.error(error.message);
+    console.error('getUserAccounts error:', error.message);
+    throw error; // Re-throw so error boundaries can catch it
   }
 }
 
