@@ -9,6 +9,8 @@ import useRefreshUser from "@/reduxStore/hook/useRefreshUser";
 import Loading from "@/components/spinLoader";
 import { refreshUserData } from "@/app/lib/refreshUser";
 
+export const dynamic = 'force-dynamic'
+
 export default function SuccessPage() {
   const params = useSearchParams();
   const sessionId = params.get("session_id");
