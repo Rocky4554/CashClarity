@@ -1,9 +1,11 @@
 
-export const dynamic = 'force-dynamic'
-
 'use client';
 
 import { loadStripe } from "@stripe/stripe-js";
+
+
+export const dynamic = 'force-dynamic'
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle2 } from "lucide-react";
