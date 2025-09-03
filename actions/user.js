@@ -89,31 +89,6 @@ export async function getUserInfo(options = {}) {
   }
 }
 
- 
-// Helper function to get basic user info (most common use case)
-// export async function getBasicUserInfo() {
-//   return getUserInfo();
-// }
-
-// // Helper function to get user with all related data
-// export async function getFullUserInfo() {
-//   return getUserInfo({
-//     includeTransactions: true,
-//     includeAccounts: true,
-//     includeBudgets: true,
-//     transactionLimit: 50,
-//   });
-// }
-
-// // Helper function to get user dashboard data
-// export async function getUserDashboardInfo() {
-//   return getUserInfo({
-//     includeTransactions: true,
-//     includeAccounts: true,
-//     transactionLimit: 5,
-//   });
-// }
-
 export async function updateUserProStatus(sessionId, userId) {
   try {
     if (!userId) {

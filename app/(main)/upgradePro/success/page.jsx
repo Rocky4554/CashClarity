@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import useRefreshUser from "@/reduxStore/hook/useRefreshUser";
 import Loading from "@/components/spinLoader";
+import { refreshUserData } from "@/app/lib/refreshUser";
 
 export default function SuccessPage() {
   const params = useSearchParams();
@@ -23,6 +24,7 @@ export default function SuccessPage() {
       .then((data) => {
         setSession(data);
         refreshUser(); // ✅ Updates Redux store + refreshes server components
+        refreshUserData();   // revalidates server components
       })
       .catch(console.error);
   }, [sessionId]);
