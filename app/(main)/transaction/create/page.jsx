@@ -4,6 +4,9 @@ import { AddTransactionForm } from "../_components/transaction-form";
 import { getTransaction } from "@/actions/transaction";
 import {getUserInfo} from "@/actions/user";
 
+// Add this line to force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export default async function AddTransactionPage({ searchParams }) {
   const accounts = await getUserAccounts();
   const editId = await searchParams?.edit;
