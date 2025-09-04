@@ -27,8 +27,10 @@ export async function POST() {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/upgradePro/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/upgradePro`,
+      // success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/upgradePro/success?session_id={CHECKOUT_SESSION_ID}`,
+      // cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/upgradePro`,
+      success_url: 'https://cash-clarity-orpin.vercel.app/upgradePro/success?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: 'https://cash-clarity-orpin.vercel.app/upgradePro',
       // Store user ID in metadata
       metadata: {
         userId: userId,
