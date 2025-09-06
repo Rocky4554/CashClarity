@@ -1,8 +1,7 @@
 "use client";
-
 import React, { useEffect } from "react";
 import { markTourSeen } from "@/actions/user"; // server action
-import {driver} from "driver.js";
+import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 
 export default function ProductTour({ user }) {
@@ -13,9 +12,9 @@ export default function ProductTour({ user }) {
   }, [user]);
 
   const startTour = () => {
-    const driver = new Driver({
+    const driverObj = driver({
       showProgress: true,
-      showButtons: ["next", "previous", "close"], // driver.js controls
+      showButtons: ["next", "previous", "close"],
       nextBtnText: "Next →",
       prevBtnText: "← Back",
       doneBtnText: "Finish",
@@ -31,13 +30,13 @@ export default function ProductTour({ user }) {
       },
     });
 
-    driver.defineSteps([
+    driverObj.defineSteps([
       {
         element: "body",
         popover: {
           title: "Welcome 👋",
           description:
-            "Welcome to your dashboard! Let’s take a quick tour to get you started.",
+            "Welcome to your dashboard! Let's take a quick tour to get you started.",
           side: "center",
           align: "center",
         },
@@ -112,15 +111,15 @@ export default function ProductTour({ user }) {
         element: "body",
         popover: {
           title: "You're all set 🎉",
-          description: "That’s the end of the tour. Start using the app happily 😌.",
+          description: "That's the end of the tour. Start using the app happily 😌.",
           side: "center",
           align: "center",
         },
       },
     ]);
 
-    driver.drive();
+    driverObj.drive();
   };
 
-  return null; // driver.js doesn’t need a component render
+  return null; // driver.js doesn't need a component render
 }
