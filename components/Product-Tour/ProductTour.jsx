@@ -1,129 +1,126 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Joyride from "react-joyride";
-import { markTourSeen } from "@/actions/user"; // 👈 import server action
+import React, { useEffect } from "react";
+import { markTourSeen } from "@/actions/user"; // server action
+import Driver from "driver.js";
+import "driver.js/dist/driver.css";
 
 export default function ProductTour({ user }) {
-  const [runTour, setRunTour] = useState(false);
-
-  const steps = [
-    {
-      target: "body",
-      placement: "center",
-      content: (
-        <div>
-          <h2 className="font-bold text-lg mb-2">Welcome 👋</h2>
-          <p>Welcome to your dashboard! Let’s take a quick tour to get you started.</p>
-        </div>
-      ),
-      disableBeacon: true,
-    },
-    {
-      target: ".add-account-card",
-      content: "Click here to create a new account and get started. You can create multiple accounts as needed.",
-      placement: "top",
-    },
-    {
-      target: ".edit-budget-btn",
-      content: "Use this button to edit your monthly budget.",
-      placement: "top",
-    },
-    {
-      target: ".account-btn",
-      content: "Use this button to see all your account.",
-      placement: "top",
-    },
-    {
-      target: ".transaction-btn",
-      content: "Click here to add transactions.",
-      placement: "bottom",
-    },
-    {
-      target: ".upgrade-btn",
-      content: "Here you can upgrade to Pro User. You will get some extra features.",
-      placement: "bottom",
-    },
-    {
-      target: ".transaction-overview-card",
-      content: "Here you can see all your most recent transactions.",
-      placement: "auto",
-    },
-    {
-      target: ".monthly-expense-breakdown",
-      content: "Here you can see monthly breakdown of your expense.",
-      placement: "right",
-    },
-    {
-      target: ".contact-btn",
-      content: "Click here to contact us for any query or support.",
-      placement: "auto",
-    },
-    {
-      target: "body",
-      placement: "center",
-      content: (
-        <div>
-          <h2 className="font-bold text-lg mb-2">You're all set 🎉</h2>
-          <p>That’s the end of the tour. Start using the app happily 😌.</p>
-        </div>
-      ),
-      disableBeacon: true,
-    },
-  ];
-
   useEffect(() => {
-     console.log("ProductTour user:", user);
     if (user && user.hasSeenTour === false) {
-      setRunTour(true);
+      startTour();
     }
   }, [user]);
 
-    // const handleTourEnd = () => {
-  //   if (user?.id && typeof window !== "undefined") {
-  //     localStorage.setItem(`seenTour_${user.id}`, "true");
-  //   }
-  //   setRunTour(false);
+  const startTour = () => {
+    const driver = new Driver({
+      showProgress: true,
+      showButtons: ["next", "previous", "close"], // driver.js controls
+      nextBtnText: "Next →",
+      prevBtnText: "← Back",
+      doneBtnText: "Finish",
+      overlayClickNext: false,
+      onDestroyStarted: async () => {
+        // called when finished or closed
+        if (user?.id) {
+          await markTourSeen(); // update DB
+        }
+        if (typeof window !== "undefined") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      },
+    });
 
-  //   // 👇 Scroll to top after finishing/skipping tour
-  //   if (typeof window !== "undefined") {
-  //     window.scrollTo({ top: 0, behavior: "smooth" });
-  //   }
-  // };
+    driver.defineSteps([
+      {
+        element: "body",
+        popover: {
+          title: "Welcome 👋",
+          description:
+            "Welcome to your dashboard! Let’s take a quick tour to get you started.",
+          side: "center",
+          align: "center",
+        },
+      },
+      {
+        element: ".add-account-card",
+        popover: {
+          title: "Create Account",
+          description:
+            "Click here to create a new account and get started. You can create multiple accounts as needed.",
+          side: "top",
+        },
+      },
+      {
+        element: ".edit-budget-btn",
+        popover: {
+          title: "Edit Budget",
+          description: "Use this button to edit your monthly budget.",
+          side: "top",
+        },
+      },
+      {
+        element: ".account-btn",
+        popover: {
+          title: "Accounts",
+          description: "Use this button to see all your accounts.",
+          side: "top",
+        },
+      },
+      {
+        element: ".transaction-btn",
+        popover: {
+          title: "Transactions",
+          description: "Click here to add transactions.",
+          side: "bottom",
+        },
+      },
+      {
+        element: ".upgrade-btn",
+        popover: {
+          title: "Upgrade",
+          description:
+            "Here you can upgrade to Pro User. You will get some extra features.",
+          side: "bottom",
+        },
+      },
+      {
+        element: ".transaction-overview-card",
+        popover: {
+          title: "Recent Transactions",
+          description: "Here you can see all your most recent transactions.",
+          side: "auto",
+        },
+      },
+      {
+        element: ".monthly-expense-breakdown",
+        popover: {
+          title: "Monthly Breakdown",
+          description: "Here you can see monthly breakdown of your expenses.",
+          side: "right",
+        },
+      },
+      {
+        element: ".contact-btn",
+        popover: {
+          title: "Contact Us",
+          description: "Click here to contact us for any query or support.",
+          side: "auto",
+        },
+      },
+      {
+        element: "body",
+        popover: {
+          title: "You're all set 🎉",
+          description: "That’s the end of the tour. Start using the app happily 😌.",
+          side: "center",
+          align: "center",
+        },
+      },
+    ]);
 
-  const handleTourEnd = async () => {
-    if (user?.id) {
-      await markTourSeen(); // 👈 directly update DB
-    }
-    setRunTour(false);
-
-    // Scroll to top
-    if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    driver.drive();
   };
 
-  return (
-    <Joyride
-      steps={steps}
-      run={runTour}
-      continuous={true}
-      showSkipButton={true}
-      showProgress={true}
-      scrollToFirstStep={true}
-      scrollOffset={80}
-      styles={{
-        options: {
-          primaryColor: "#2563eb",
-          zIndex: 10000,
-        },
-      }}
-      callback={(data) => {
-        const { status } = data;
-        if (["finished", "skipped"].includes(status)) {
-          handleTourEnd();
-        }
-      }}
-    />
-  );
+  return null; // driver.js doesn’t need a component render
 }
