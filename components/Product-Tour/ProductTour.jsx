@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { markTourSeen } from "@/actions/user"; // server action
-import Driver from "driver.js";
+import {driver} from "driver.js";
 import "driver.js/dist/driver.css";
 
 export default function ProductTour({ user }) {
