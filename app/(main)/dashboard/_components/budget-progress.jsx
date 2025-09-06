@@ -114,7 +114,7 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
                   onClick={() => setIsEditing(true)}
                   className="h-6 w-6"
                 >
-                  <Pencil className="h-3 w-3" />
+                  <Pencil className="h-3 w-3 edit-budget-btn" />
                 </Button>
               </>
             )}
