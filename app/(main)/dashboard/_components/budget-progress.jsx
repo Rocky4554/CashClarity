@@ -272,7 +272,7 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
               </div>
             ) : (
               <>
-<<<<<<< HEAD
+
                 {isUpdating ? (
                   // Show shimmer while updating
                   <div className="flex items-center gap-2">
@@ -298,23 +298,6 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
                     </Button>
                   </>
                 )}
-=======
-                <CardDescription>
-                  {initialBudget
-                    ? `$${currentExpenses.toFixed(
-                        2
-                      )} of $${initialBudget.amount.toFixed(2)} spent`
-                    : "No budget set"}
-                </CardDescription>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsEditing(true)}
-                  className="h-6 w-6"
-                >
-                  <Pencil className="h-3 w-3" />
-                </Button>
->>>>>>> parent of 5a981be (app tour addeed)
               </>
             )}
           </div>
