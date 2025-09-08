@@ -24,7 +24,6 @@ model User {
   budgets       Budget[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
-  hasSeenTour  Boolean  @default(false)
 
   @@map("users")
 }

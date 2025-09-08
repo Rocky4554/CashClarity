@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import 'shepherd.js/dist/css/shepherd.css';
+
 
 /* ========== Theme Setup ========== */
 @custom-variant dark (&:is(.dark *));
@@ -220,7 +222,7 @@
     }
   }
 
-  /* Shimmer Animations */
+  /* Shimmer Animations - Original */
   .animate-shimmer-border {
     animation: shimmer-border 2s ease-in-out infinite;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
@@ -231,6 +233,91 @@
   .animate-shimmer {
     background-size: 200% 100%;
     animation: shimmer 2s ease-in-out infinite;
+  }
+
+  /* Enhanced Shimmer Animation - New Classes */
+  .animate-shimmer-enhanced {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer-enhanced 2s infinite;
+  }
+
+  .dark .animate-shimmer-enhanced {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+    background-size: 200% 100%;
+    animation: shimmer-enhanced 2s infinite;
+  }
+
+  /* Skeleton base styles */
+  .skeleton-shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer-enhanced 2s infinite;
+    border-radius: 0.375rem;
+  }
+
+  .dark .skeleton-shimmer {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+    background-size: 200% 100%;
+    animation: shimmer-enhanced 2s infinite;
+  }
+
+  /* Account Card Loading Shimmer */
+  .account-card-loading {
+    background: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 20%, #dee2e6 50%, #e9ecef 80%, #f8f9fa 100%);
+    background-size: 200% 100%;
+    animation: account-shimmer 1.8s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dark .account-card-loading {
+    background: linear-gradient(90deg, #2d3748 0%, #4a5568 20%, #718096 50%, #4a5568 80%, #2d3748 100%);
+    background-size: 200% 100%;
+    animation: account-shimmer 1.8s ease-in-out infinite;
+  }
+
+  /* Account Card Text Shimmer Elements */
+  .account-card-loading .shimmer-text {
+    background: linear-gradient(90deg, #e9ecef 0%, #f8f9fa 50%, #e9ecef 100%);
+    background-size: 200% 100%;
+    animation: text-shimmer 2s ease-in-out infinite;
+    border-radius: 4px;
+    height: 1rem;
+    margin: 0.25rem 0;
+  }
+
+  .dark .account-card-loading .shimmer-text {
+    background: linear-gradient(90deg, #4a5568 0%, #2d3748 50%, #4a5568 100%);
+    background-size: 200% 100%;
+    animation: text-shimmer 2s ease-in-out infinite;
+  }
+
+  @keyframes account-shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes text-shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes shimmer-enhanced {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
   }
 
   @keyframes shimmer-border {

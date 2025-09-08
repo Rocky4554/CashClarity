@@ -222,12 +222,12 @@ export default function HeaderClient() {
               {/* Transactions Dropdown */}
               <div
                 className="relative"
-                onMouseEnter={handleMouseEnter} 
+                onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
                 <Button
                   variant="outline"
-                  className="account-btn flex items-center gap-2 shadow-md"
+                  className="flex items-center gap-2 shadow-md"
                 >
                   <BadgeIndianRupee
                     size={18}
@@ -250,7 +250,7 @@ export default function HeaderClient() {
               <Link href="/transaction/create">
                 <Button
       
-                  className="transaction-btn relative flex items-center gap-2 shadow-md overflow-hidden bg-black text-white border-white hover:bg-gray-800 hover:text-white"
+                  className="relative flex items-center gap-2 shadow-md overflow-hidden bg-black text-white border-white hover:bg-gray-800 hover:text-white"
                 >
                   <PenBox size={18} className="z-10" />
                   <span className="hidden md:inline z-10">Add Transaction</span>
@@ -264,7 +264,7 @@ export default function HeaderClient() {
                 <Link href="/upgradePro">
                   <Button
                     variant="outline"
-                    className="upgrade-btn relative flex items-center gap-2 overflow-hidden bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-white shadow-md border-none"
+                    className="relative flex items-center gap-2 overflow-hidden bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-white shadow-md border-none"
                   >
                     <Sparkle size={18} className="z-10" />
                     <span className="hidden md:inline z-10">Upgrade Pro</span>
