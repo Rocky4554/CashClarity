@@ -54,9 +54,7 @@
 
 
 /////////////
-
-
-import arcjet, { createMiddleware, detectBot, shield } from "@arcjet/next";
+import arcjet, { createMiddleware, detectBot, protect } from "@arcjet/next";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
@@ -70,20 +68,17 @@ const isProtectedRoute = createRouteMatcher([
 const aj = arcjet({
   key: process.env.ARCJET_KEY,
   rules: [
-    shield({
+    protect({
       mode: "LIVE",
     }),
     detectBot({
       mode: "LIVE",
-      allow: [
-        "CATEGORY:SEARCH_ENGINE",
-        "GO_HTTP",
-      ],
+      allow: ["CATEGORY:SEARCH_ENGINE", "GO_HTTP"],
     }),
   ],
 });
 
-// Clerk middleware
+// Clerk setup
 const clerk = clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
 
@@ -95,13 +90,13 @@ const clerk = clerkMiddleware(async (auth, req) => {
   return NextResponse.next();
 });
 
-// Chain middlewares
-export default createMiddleware(clerk, aj); // 👈 run Clerk first, Arcjet second
+// ✅ Run Clerk first, then Arcjet
+export default createMiddleware(clerk, aj);
 
 export const config = {
   matcher: [
-    // Don’t run for Next internals, static assets, or favicons
-    "/((?!_next|.*\\.(?:html?|css|js|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Exclude _next, static files, AND favicons
+    "/((?!_next|.*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ico|ttf|woff2?|csv|docx?|xlsx?|zip|webmanifest)).*)",
     "/(api|trpc)(.*)",
   ],
 };
