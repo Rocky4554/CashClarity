@@ -201,7 +201,6 @@
 // }
 
 ///////////////////////////////
-
 import { Suspense } from "react";
 import { getUserAccounts } from "@/actions/dashboard";
 import { getDashboardData } from "@/actions/dashboard";
@@ -216,7 +215,7 @@ import { CreateAccountWrapper } from "../../../components/drawer/create-account-
 import ProductTour from "./_components/ProductTourWrapper";
 import { db } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
-import { AccountsGrid } from "./_components/AccountGrid"; // New import
+import { AccountsGrid } from "./_components/AccountGrid";
 import {
   BudgetProgressSkeleton,
   AccountsGridSkeleton,
@@ -255,16 +254,27 @@ async function OverviewSection() {
   );
 }
 
-// Updated AccountsSection - now just fetches data and passes to client component
+// Fixed AccountsSection - properly handle loading state
 async function AccountsSection() {
-  const accounts = await getUserAccounts();
-
-  return (
-    <AccountsGrid 
-      accounts={accounts} 
-      isLoading={false} // Since this is server-side, data is already loaded
-    />
-  );
+  try {
+    const accounts = await getUserAccounts();
+    
+    return (
+      <AccountsGrid 
+        accounts={accounts}
+        isLoading={false} // Data is loaded on server
+      />
+    );
+  } catch (error) {
+    console.error('Error loading accounts:', error);
+    // Return empty state or error state
+    return (
+      <AccountsGrid 
+        accounts={[]}
+        isLoading={false}
+      />
+    );
+  }
 }
 
 async function ProductTourSection() {
@@ -298,7 +308,7 @@ export default function DashboardPage() {
         <OverviewSection />
       </Suspense>
 
-      {/* Accounts Grid with Shimmer - Updated to use new component */}
+      {/* Accounts Grid with Shimmer */}
       <Suspense fallback={<AccountsGridSkeleton />}>
         <AccountsSection />
       </Suspense>
