@@ -63,6 +63,7 @@ model Transaction {
   account          Account           @relation(fields: [accountId], references: [id], onDelete: Cascade)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
+  hasSeenTour  Boolean  @default(false)
 
   @@index([userId])
   @@index([accountId])
