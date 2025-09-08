@@ -133,31 +133,3 @@ export async function updateUserProStatus(sessionId, userId) {
     return { success: false, error: error.message };
   }
 }
-
-export async function markTourSeen() {
-  try {
-    const { userId } = await auth();
-    if (!userId) throw new Error("Unauthorized");
-
-    // Find user in DB by clerkUserId
-    const user = await db.user.findUnique({
-       where: { clerkUserId: userId },
-    });
-
-    if (!user) throw new Error("User not found");
-
-    // Update flag
-    const updatedUser = await db.user.update({
-      where: { id: user.id },
-      data: { hasSeenTour: true },
-    });
-
-    // Revalidate paths where user info matters
-    revalidatePath("/dashboard");
-    revalidatePath("/");
-
-    return { success: true, data: updatedUser };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
