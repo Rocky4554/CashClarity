@@ -9,7 +9,10 @@ export const dynamic = 'force-dynamic'
 
 export default async function AddTransactionPage({ searchParams }) {
   const accounts = await getUserAccounts();
-  const editId = await searchParams?.edit;
+  // const editId = searchParams?.edit;
+
+    const { edit } = await searchParams;
+  const editId = edit ?? null;
   const userInfo = await getUserInfo(); // Get the full user info
 
 
