@@ -54,32 +54,67 @@ export const config = {
 
 
 /////////////
-// import arcjet, { createMiddleware, detectBot, protect } from "@arcjet/next";
+
+// // import arcjet, { createMiddleware, detectBot, protect } from "@arcjet/next";
+// // import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+// // import { NextResponse } from "next/server";
+
+// // const isProtectedRoute = createRouteMatcher([
+// //   "/dashboard(.*)",
+// //   "/account(.*)",
+// //   "/transaction(.*)",
+// // ]);
+
+// // // Arcjet setup
+// // const aj = arcjet({
+// //   key: process.env.ARCJET_KEY,
+// //   rules: [
+// //     protect({
+// //       mode: "LIVE",
+// //     }),
+// //     detectBot({
+// //       mode: "LIVE",
+// //       allow: ["CATEGORY:SEARCH_ENGINE", "GO_HTTP"],
+// //     }),
+// //   ],
+// // });
+
+// // // Clerk setup
+// // const clerk = clerkMiddleware(async (auth, req) => {
+// //   const { userId } = await auth();
+
+// //   if (!userId && isProtectedRoute(req)) {
+// //     const { redirectToSignIn } = await auth();
+// //     return redirectToSignIn();
+// //   }
+
+// //   return NextResponse.next();
+// // });
+
+// // // ✅ Run Clerk first, then Arcjet
+// // export default createMiddleware(clerk, aj);
+
+// // export const config = {
+// //   matcher: [
+// //     // Exclude _next, static files, AND favicons
+// //     "/((?!_next|.*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ico|ttf|woff2?|csv|docx?|xlsx?|zip|webmanifest)).*)",
+// //     "/(api|trpc)(.*)",
+// //   ],
+// // };
+
+// /////////////////////////////
+
 // import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 // import { NextResponse } from "next/server";
 
+// // Define which routes require auth
 // const isProtectedRoute = createRouteMatcher([
 //   "/dashboard(.*)",
 //   "/account(.*)",
 //   "/transaction(.*)",
 // ]);
 
-// // Arcjet setup
-// const aj = arcjet({
-//   key: process.env.ARCJET_KEY,
-//   rules: [
-//     protect({
-//       mode: "LIVE",
-//     }),
-//     detectBot({
-//       mode: "LIVE",
-//       allow: ["CATEGORY:SEARCH_ENGINE", "GO_HTTP"],
-//     }),
-//   ],
-// });
-
-// // Clerk setup
-// const clerk = clerkMiddleware(async (auth, req) => {
+// export default clerkMiddleware(async (auth, req) => {
 //   const { userId } = await auth();
 
 //   if (!userId && isProtectedRoute(req)) {
@@ -90,13 +125,12 @@ export const config = {
 //   return NextResponse.next();
 // });
 
-// // ✅ Run Clerk first, then Arcjet
-// export default createMiddleware(clerk, aj);
-
 // export const config = {
 //   matcher: [
-//     // Exclude _next, static files, AND favicons
+//     // Exclude _next, static files, favicons etc.
 //     "/((?!_next|.*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ico|ttf|woff2?|csv|docx?|xlsx?|zip|webmanifest)).*)",
+//     // Always run for API routes
 //     "/(api|trpc)(.*)",
 //   ],
 // };
+
