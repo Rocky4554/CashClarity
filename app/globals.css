@@ -182,8 +182,19 @@
     background: linear-gradient(135deg, #2563eb, #9333ea);
   }
 
-  .gradient-title {
+  /* .gradient-title {
     background: linear-gradient(135deg, #2563eb, #9333ea);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    padding-right: 0.5rem;
+    padding-bottom: 0.5rem;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+  } */
+
+    .gradient-title {
+    background: linear-gradient(135deg, #edeff3, #fdfdfc);
     font-weight: 800;
     letter-spacing: -0.025em;
     padding-right: 0.5rem;

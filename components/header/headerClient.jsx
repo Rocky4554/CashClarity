@@ -1586,7 +1586,7 @@ export default function HeaderClient() {
   return (
     <>
       <header
-        className={`fixed top-0 w-full ${isPro ? "bg-gradient-to-r from-blue-100/90 to-purple-200/50 border-blue-200/50" : "bg-gradient-to-r from-green-100/90 to-white-50/90 border-blue-200/50"} backdrop-blur-md z-50 border-b transition-all duration-500`}
+        className={`fixed top-0 w-full ${isPro ? "bg-gradient-to-r from-blue-100/90 to-purple-200/50 border-blue-200/50" : "bg-slate-100"} backdrop-blur-md z-50 border-b transition-all duration-500`}
       >
         <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
           {/* Logo */}
