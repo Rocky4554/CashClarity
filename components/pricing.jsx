@@ -67,7 +67,7 @@
 // //   }
 // ];
 
-// const Pricing = ({ 
+// const Pricing = ({
 //   tiers = pricingTiers,
 //   title = "",
 //   subtitle = "Choose the right plan for you",
@@ -109,8 +109,8 @@
 //             <div
 //               key={tier.id}
 //               className={classNames(
-//                 tier.featured 
-//                   ? 'relative bg-neutral-800 ring-2 ring-blue-500 shadow-2xl scale-105' 
+//                 tier.featured
+//                   ? 'relative bg-neutral-800 ring-2 ring-blue-500 shadow-2xl scale-105'
 //                   : 'bg-neutral-800/50 ring-1 ring-neutral-700',
 //                 'rounded-2xl p-8 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:ring-blue-500/50'
 //               )}
@@ -183,6 +183,7 @@
 // };
 
 // export default Pricing;
+
 "use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
@@ -193,54 +194,19 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const pricingTiers = [
-  {
-    name: "Free",
-    id: "tier-free",
-    priceMonthly: "0",
-    description: "Perfect for personal finance management",
-    features: [
-      "Up to 3 accounts",
-      "100 transactions per month",
-      "Basic analytics",
-      "Email support",
-      "Mobile app access",
-    ],
-    featured: false,
-    buttonText: "Get Started Free",
-    ctaLink: "/dashboard",
-  },
-  {
-    name: "Pro",
-    id: "tier-pro",
-    priceMonthly: "50",
-    description: "Best for individuals and small businesses",
-    features: [
-      "Unlimited accounts",
-      "Unlimited transactions",
-      "Advanced analytics & insights",
-      "AI-powered receipt scanning",
-      "Priority support",
-      "Export to Excel/CSV",
-      "Custom categories",
-      "Multi-device sync",
-    ],
-    featured: true,
-    buttonText: "Start 14-Day Free Trial",
-    ctaLink: "/dashboard",
-  },
-  
-];
-
 const Pricing = ({
-  tiers = pricingTiers,
+  tiers,
   title = "",
   subtitle = "Choose the right plan for you",
   description = "Start free and scale as you grow. All plans include our core features with no hidden fees.",
-  showBackground = true,
+  showBackground = false,
+  onCheckout,
 }) => {
   return (
-    <section id="pricing" className="py-12 bg-neutral-900 relative overflow-hidden">
+    <section
+      id="pricing"
+      className="py-12 relative overflow-hidden"
+    >
       {showBackground && (
         <div className="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl">
           <div
@@ -255,14 +221,14 @@ const Pricing = ({
 
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="mx-auto max-w-3xl text-center mb-10">   
-          <h2 className="text-sm font-semibold leading-6 text-blue-400 mb-1">
+        <div className="mx-auto max-w-3xl text-center mb-10">
+          <h2 className="text-sm font-semibold leading-6 text-neutral-900 mb-1">
             {title}
           </h2>
-          <p className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white mb-3">
+          <p className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-black mb-3">
             {subtitle}
           </p>
-          <p className="text-base text-neutral-400 max-w-xl mx-auto">
+          <p className="text-base text-neutral-700 max-w-xl mx-auto">
             {description}
           </p>
         </div>
@@ -276,9 +242,9 @@ const Pricing = ({
                 className={classNames(
                   tier.featured
                     ? "relative bg-neutral-800 ring-2 ring-blue-500 shadow-xl scale-105"
-                    : "bg-neutral-800/50 ring-1 ring-neutral-700",
+                    : "bg-neutral-800 ring-1 ring-neutral-700",
                   "rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:ring-blue-500/50",
-                  "w-[260px] sm:w-[280px] md:w-[300px]"
+                  "w-[260px] sm:w-[300px]"
                 )}
               >
                 {/* Featured badge */}
@@ -298,7 +264,7 @@ const Pricing = ({
                 {/* Price */}
                 <div className="mb-4">
                   <span className="text-3xl font-bold text-white">
-                   &#8377;{tier.priceMonthly}
+                    ₹{tier.priceMonthly}
                   </span>
                   <span className="text-neutral-400 text-sm">/month</span>
                 </div>
@@ -313,19 +279,32 @@ const Pricing = ({
                   {tier.features.map((feature, idx) => (
                     <li
                       key={idx}
-                      className="flex items-start gap-2 text-neutral-300 group"
+                      className={classNames(
+                        "flex items-start gap-2 group",
+                        feature.included
+                          ? "text-neutral-300"
+                          : "text-neutral-500 line-through"
+                      )}
                     >
-                      <Check className="h-4 w-4 text-blue-400 flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                      {feature.included ? (
+                        <Check className="h-4 w-4 text-blue-400 flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                      ) : (
+                        <span className="h-4 w-4 flex-shrink-0 mt-0.5 text-red-400">
+                          ✗
+                        </span>
+                      )}
                       <span className="group-hover:text-white transition-colors">
-                        {feature}
+                        {feature.text}
                       </span>
                     </li>
                   ))}
                 </ul>
 
                 {/* CTA Button */}
-                <Link href={tier.ctaLink || "/dashboard"}>
+                {/* CTA Button */}
+                {tier.name === "Pro" && onCheckout ? (
                   <Button
+                    onClick={onCheckout}
                     className={classNames(
                       tier.featured
                         ? "bg-blue-500 hover:bg-blue-600 text-white shadow-md"
@@ -335,18 +314,32 @@ const Pricing = ({
                   >
                     {tier.buttonText}
                   </Button>
-                </Link>
+                ) : (
+                  <Link href={tier.ctaLink || "/dashboard"}>
+                    <Button
+                      className={classNames(
+                        tier.featured
+                          ? "bg-blue-500 hover:bg-blue-600 text-white shadow-md"
+                          : "bg-neutral-700 hover:bg-neutral-600 text-white",
+                        "w-full text-sm py-2"
+                      )}
+                    >
+                      {tier.buttonText}
+                    </Button>
+                  </Link>
+                )}
               </div>
             ))}
           </div>
         </div>
 
         {/* Additional info */}
-        <div className="text-center mt-8">
+        {/* <div className="text-center mt-8">
           <p className="text-neutral-500 text-xs">
-            All plans include 14-day free trial • Cancel anytime • No credit card required
+            All plans include 14-day free trial • Cancel anytime • No credit
+            card required
           </p>
-        </div>
+        </div> */}
       </div>
     </section>
   );
