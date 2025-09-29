@@ -40,7 +40,7 @@ const LandingPage = () => {
                   business expenses, and more.
                 </p>
               </div>
-              <img
+              <Image
                 src="/images/account.png"
                 width={600}
                 height={600}
@@ -59,7 +59,7 @@ const LandingPage = () => {
                 </p>
               </div>
 
-              <img
+              <Image
                 src="/images/reacent.png"
                 width={600}
                 height={600}
@@ -76,10 +76,10 @@ const LandingPage = () => {
                   Never Miss a Transaction Add expenses on the go - quick,
                   simple, and always at your fingertips. <br/>.Say Goodbye to Manual
                   Entry Our AI-powered scanner reads receipts instantly. Just
-                  snap, and we'll handle the rest.
+                  snap, and we&apos;ll handle the rest.
                 </p>
               </div>
-              <img
+              <Image
                 src="/images/trans.png"
                 width={600}
                 height={500}
@@ -97,7 +97,7 @@ const LandingPage = () => {
                 </p>
               </div>
 
-              <img
+              <Image
                 src="/images/Export.png"
                 width={600}
                 height={500}
