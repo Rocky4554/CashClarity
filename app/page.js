@@ -12,7 +12,8 @@ import {
 import HeroSection from "@/components/hero";
 import Link from "next/link";
 import { WobbleCard } from "@/components/ui/wobble-card";
-import Pricing from "@/components/pricing"
+import Pricing from "@/components/landingPage-pricing"
+import Pricingtier from "@/data/pricingTiers"
 
 const LandingPage = () => {
   return (
@@ -147,7 +148,7 @@ const LandingPage = () => {
       </section> */}
 
       <section id="pricing" className="py-20">
-        <Pricing/>
+        <Pricing tiers={Pricingtier}/>
       </section>
 
       {/* Testimonials Section */}

@@ -2,7 +2,8 @@
 'use client';
 
 import { loadStripe } from "@stripe/stripe-js";
-
+import Pricing from "@/components/pricing"
+import Pricingtier from "@/data/pricingTiers"
 
 export const dynamic = 'force-dynamic'
 
@@ -25,8 +26,8 @@ export default function UpgradeProPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16">
-      <Card className="p-6 space-y-4 text-center">
+    <div>
+      {/* <Card className="p-6 space-y-4 text-center">
         <CheckCircle2 className="mx-auto h-10 w-10 text-green-500" />
         <h2 className="text-2xl font-bold">Upgrade to Pro</h2>
         <ul className="list-disc list-inside text-left text-gray-600 space-y-1 hover: text-blue-400">
@@ -39,7 +40,10 @@ export default function UpgradeProPage() {
           <li className="hover:text-blue-800">Priority support</li>
         </ul>
         <Button onClick={handleCheckout} className="mt-4">Buy Pro Package</Button>
-      </Card>
+      </Card> */}
+
+    <Pricing tiers={Pricingtier} onCheckout={handleCheckout}/>
+
     </div>
   );
 }
