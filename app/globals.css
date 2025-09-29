@@ -182,7 +182,7 @@
     background: linear-gradient(135deg, #2563eb, #9333ea);
   }
 
-  /* .gradient-title {
+  .gradient-title {
     background: linear-gradient(135deg, #2563eb, #9333ea);
     font-weight: 800;
     letter-spacing: -0.025em;
@@ -191,10 +191,9 @@
     color: transparent;
     background-clip: text;
     -webkit-background-clip: text;
-  } */
-
-    .gradient-title {
-    background: linear-gradient(135deg, #edeff3, #fdfdfc);
+  }
+   .gradient-hero-title {
+    background: linear-gradient(135deg, #fbfcfd, #d7d5da);
     font-weight: 800;
     letter-spacing: -0.025em;
     padding-right: 0.5rem;
@@ -203,6 +202,17 @@
     background-clip: text;
     -webkit-background-clip: text;
   }
+/* 
+  .gradient-title {
+    background: linear-gradient(135deg, #edeff3, #fdfdfc);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    padding-right: 0.5rem;
+    padding-bottom: 0.5rem;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+  } */
 
   .animate-gradient {
     background-size: 200% 200%;
@@ -293,8 +303,7 @@
     font-weight: bold;
     font-family: monospace;
     font-size: 25px;
-    background: radial-gradient(circle closest-side, #A4193D 94%, #f1080800)
-      right / calc(200% - 1em) 100%;
+    background: radial-gradient(circle closest-side, #A4193D 94%, #f1080800) right / calc(200% - 1em) 100%;
     animation: l24 2s infinite alternate linear;
     position: relative;
   }

@@ -9,7 +9,7 @@ import Header from "@/components/header/headerServer";
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from "sonner";
 import { ReduxProvider } from '@/app/lib/ReduxProvider.js';
-import Footer from '@/components/footer.js';
+import Footer from '@/components/footer.jsx';
 
 const inter = Inter({ subsets: ["latin"] });
 

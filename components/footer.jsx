@@ -286,7 +286,7 @@ const Footer = () => {
 
   return (
     <>
-      <div className="relative mt-8 sm:mt-16 bg-gray-900">
+      <div className="relative bg-gray-900">
         {/*the curved part*/}
         <svg
           className="absolute top-0 w-full h-4 -mt-3 sm:-mt-5 sm:h-6 md:-mt-10 md:h-16 text-gray-900"
