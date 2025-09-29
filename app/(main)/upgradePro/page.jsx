@@ -25,7 +25,7 @@ export default function UpgradeProPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16">
+    < className="max-w-2xl mx-auto px-4 py-16">
       <Card className="p-6 space-y-4 text-center">
         <CheckCircle2 className="mx-auto h-10 w-10 text-green-500" />
         <h2 className="text-2xl font-bold">Upgrade to Pro</h2>
@@ -40,6 +40,6 @@ export default function UpgradeProPage() {
         </ul>
         <Button onClick={handleCheckout} className="mt-4">Buy Pro Package</Button>
       </Card>
-    </div>
+    </>
   );
 }
